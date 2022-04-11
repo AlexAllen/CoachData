@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import sys
 
 
 remit_order = ["Bellboat",
@@ -32,8 +33,6 @@ provider_options = ["PPA Provider",
                     "Open Water Touring Award Provider",
                     "Multi Day Touring Award Provider",
                     "FSRT Provider"]
-
-
 
 
 def non_nan(stuff):
@@ -329,7 +328,6 @@ class CoachList:
                 coach_df = self.coaches[coach].produce_dataframe()
                 add_to_writer_with_fixed_col_widths(writer, coach_df, sheetname=coach)
 
-
             
 class Coach:
     def __init__(self, name):
@@ -575,8 +573,9 @@ if __name__ == "__main__":
         for line in inFile:
             coach_names.append(" ".join(line.split()))
 
+    existing_fp = sys.argv[1] if len(sys.argv) > 1 else "Coaches Summary.xlsx"
     cl = CoachList()
-    cl.read_existing("Coaches Summary.xlsx")
+    cl.read_existing(existing_fp)
     cl.read_safety_report("Safety Report.xlsx", coach_names)
     cl.read_first_aid_report("First Aid Training.xlsx", coach_names)
     cl.read_safeguarding_report("Safeguarding Report.xlsx", coach_names)
