@@ -17,7 +17,9 @@ The summary sheets it currently produces are:
 
 ### Instructions for Use 
 
-CoachData is run from the command line, and was written for python 3.9.7 and pandas version 1.3.4. It should be placed in a folder with all the files necessary, and run from that location. It can either update an existing coaches summary it has produced, or it can generate a new one. It takes a single optional argument, which specifies which summary to update. If no argument is specified it will read in "Coaches Summary.xlsx" if it is present. Output is always to "Coaches Summary.xlsx".
+CoachData is run from the command line, and was written for python 3.9.7 and pandas version 1.3.4. It should be placed in a folder with all the files necessary, and run from that location. It can either update an existing coaches summary it has produced, or it can generate a new one. 
+
+It takes a single optional argument, which specifies which summary to update. If no argument is specified it will read in "Coaches Summary.xlsx" if it is present. Output is always to "Coaches Summary.xlsx".
 
 In addition, the following files are used when updating:
 - *Required:* "active_coaches.txt"
