@@ -22,6 +22,18 @@ remit_order = ["Bellboat",
                "Advanced white water – canoe",
                "Advanced open water – canoe",
                "Advanced sea – kayak"]
+               
+               
+provider_options = ["PPA Provider", 
+                    "Paddle Explore Award Provider",
+                    "White Water Award Provider",
+                    "Canoe Award Provider",
+                    "Touring Award Provider",
+                    "Open Water Touring Award Provider",
+                    "Multi Day Touring Award Provider",
+                    "FSRT Provider"]
+
+
 
 
 def non_nan(stuff):
@@ -75,7 +87,7 @@ class CoachList:
 
     def _read_existing(self, fp):
         xl_file = pd.ExcelFile(fp)
-        coach_sheets = [a for a in xl_file.sheet_names if a not in ["Summary", "Mailing lists", "Currency", "Remits"]]
+        coach_sheets = [a for a in xl_file.sheet_names if a not in ["Summary", "Mailing lists", "Currency", "Remits", "Providerships"]]
         for coach_name in coach_sheets:
             if coach_name not in self.coaches:
                 self.coaches[coach_name] = Coach(coach_name)
@@ -279,7 +291,29 @@ class CoachList:
             coach_data = [coach] + [self.coaches[coach].remits[a] for a in remit_order]
             data.append(coach_data)
         return pd.DataFrame(data, columns=headings)
-
+    
+    def produce_provider_dataframe(self):
+        data = []
+        headings = ["Coach name"] + provider_options
+        for coach in sorted(self.coaches.keys()):
+            # create blank row, then fill
+            coach_data = [coach] + ["" for a in provider_options]
+            
+            # check each of their credentials in turn annd fill in as appropriate
+            for cred in self.coaches[coach].provider_credentials:
+                # does this make them a valid ppa provider 
+                # rules for this are different to other statuses
+                if cred.name in ["PPA Provider eLearning", "PPA Moderation eLearning"]:
+                    coach_data[1] = cred.active
+                
+                # check credential against
+                for i, s in enumerate(provider_options[1:]):
+                    if cred.name == s:
+                        coach_data[2+i] = cred.active
+            
+            data.append(coach_data)
+        return pd.DataFrame(data, columns=headings)
+                
     def write_to_excel(self, fp):
         with pd.ExcelWriter(fp) as writer:
             cr_df = self.produce_currency_dataframe()
@@ -287,6 +321,9 @@ class CoachList:
 
             rm_df = self.produce_remit_dataframe()
             add_to_writer_with_fixed_col_widths(writer, rm_df, sheetname="Remits")
+            
+            pv_df = self.produce_provider_dataframe()
+            add_to_writer_with_fixed_col_widths(writer, pv_df, sheetname="Providerships")
             
             for coach in sorted(self.coaches.keys()):
                 coach_df = self.coaches[coach].produce_dataframe()
