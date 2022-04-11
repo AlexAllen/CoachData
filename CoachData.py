@@ -195,7 +195,7 @@ class CoachList:
                 if coach_name not in self.coaches:
                     self.coaches[coach_name] = Coach(coach_name)
                 prov_cred = row["Training"]
-                date = row["Completed On"]
+                date = row["Completed On"].date()
                 active = row["Status"]
                 
                 disqual_snippets = ["Training", "Orientation", "Paddlepower", "*"]
