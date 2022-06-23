@@ -26,6 +26,7 @@ remit_order = ["Bellboat",
                
                
 provider_options = ["PPA Provider", 
+                    "Paddle Safer Provider",
                     "Paddle Explore Award Provider",
                     "White Water Award Provider",
                     "Canoe Award Provider",
@@ -304,11 +305,14 @@ class CoachList:
                 # rules for this are different to other statuses
                 if cred.name in ["PPA Provider eLearning", "PPA Moderation eLearning"]:
                     coach_data[1] = cred.active
+                # Just state if they're a paddle safer provider
+                elif cred.name == "Paddle Safer Provider eLearning":
+                    coach_data[2] = cred.active
                 
                 # check credential against
-                for i, s in enumerate(provider_options[1:]):
+                for i, s in enumerate(provider_options[2:]):
                     if cred.name == s:
-                        coach_data[2+i] = cred.active
+                        coach_data[3+i] = cred.active
             
             data.append(coach_data)
         return pd.DataFrame(data, columns=headings)
